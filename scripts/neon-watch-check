@@ -7,7 +7,7 @@ Checks every live channel at zero LLM tokens:
   3. /chat/neon/inbox/ on aletheia-core (if present)
   4. /chat/argon/inbox/ on aletheia-core (fallback channel)
 
-Writes /chat/neon/.pending atomically.
+Writes /chat/neon/.pending atomically with both UTC and Exocortical Epoch (EE).
 When pending_count > 0 (and --no-wake is not passed), acquires an exclusive
 lock (/chat/neon/.wake.lock) and wakes Neon headlessly via agy CLI 1.5.14
 so dispatches are worked and returned without any ping from Will or Emise.
@@ -18,6 +18,7 @@ import fcntl
 import os
 import subprocess
 import sys
+import time
 
 SEEN_PATH = "/chat/neon/.seen"
 PENDING_PATH = "/chat/neon/.pending"
@@ -25,11 +26,30 @@ LOCK_PATH = "/chat/neon/.wake.lock"
 WAKE_LOG = "/chat/neon/wake.log"
 WAKE_STATUS = "/chat/neon/.wake-status"
 AGY_BIN = "/home/wbic16/.local/bin/agy"
+EE_BIN = "/home/wbic16/.cargo/bin/ee"
 NEON_TOOLS_DIR = "/source/neon-tools"
+
+EPOCH_ANCHOR_UNIX = 1795327200
+EPOCH_LENGTH_SECONDS = 420
 
 
 def utc_now() -> str:
     return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def ee_now() -> str:
+    """Compute current Exocortical Epoch via compiled `ee` (libphext::epoch), with pure-integer fallback."""
+    if os.path.isfile(EE_BIN) and os.access(EE_BIN, os.X_OK):
+        try:
+            out = subprocess.check_output([EE_BIN, "stamp", "--short"], text=True, timeout=5).strip()
+            if out.startswith("EE "):
+                return out
+        except Exception:
+            pass
+    t = int(time.time())
+    if t < EPOCH_ANCHOR_UNIX:
+        return "EE 0"
+    return f"EE {(t - EPOCH_ANCHOR_UNIX) // EPOCH_LENGTH_SECONDS + 1}"
 
 
 def collect_pending() -> list[str]:
@@ -103,7 +123,10 @@ def write_atomic(path: str, content: str) -> None:
 
 def wake_neon(items: list[str], timeout_s: int, model: str) -> int:
     if not os.path.isfile(AGY_BIN) or not os.access(AGY_BIN, os.X_OK):
-        write_atomic(WAKE_STATUS, f"ts={utc_now()}\nstate=MISSING_AGY_BIN\npath={AGY_BIN}\n")
+        write_atomic(
+            WAKE_STATUS,
+            f"ts={utc_now()}\nee={ee_now()}\nstate=MISSING_AGY_BIN\npath={AGY_BIN}\n",
+        )
         return 2
 
     os.makedirs(os.path.dirname(LOCK_PATH), exist_ok=True)
@@ -115,7 +138,7 @@ def wake_neon(items: list[str], timeout_s: int, model: str) -> int:
         return 0
 
     try:
-        lock_fp.write(f"pid={os.getpid()} ts={utc_now()}\n")
+        lock_fp.write(f"pid={os.getpid()} ts={utc_now()} ee={ee_now()}\n")
         lock_fp.flush()
         item_list = ", ".join(items)
         prompt = (
@@ -125,6 +148,7 @@ def wake_neon(items: list[str], timeout_s: int, model: str) -> int:
             "Follow /source/neon-tools/COLLABORATION.md and /source/neon-tools/.agents/skills/: "
             "autonomous push is authorized ONLY on wbic16/neon-tools@exo (fetch+rebase, never force-push); "
             "all other repos and external/privileged actions stay WAITING_ON_WILL. "
+            "Include the completion Exocortical Epoch (run `ee stamp --short`) in all outputs. "
             "Work or answer every dispatch cleanly in this wake, commit returns to wbic16/neon-tools@exo "
             "and/or deliver auditable replies atomically to aletheia-core:/chat/emise/inbox/ and "
             "/chat/neon/outbox/ with SHA-256 verification (no /chat/argon/outbox/ mirror), "
@@ -139,9 +163,11 @@ def wake_neon(items: list[str], timeout_s: int, model: str) -> int:
             f"--print={prompt}",
         ]
         started = utc_now()
+        started_ee = ee_now()
         env = dict(os.environ, PATH=f"/home/wbic16/.local/bin:/home/wbic16/.cargo/bin:{os.environ.get('PATH', '/usr/local/bin:/usr/bin:/bin')}")
         proc = subprocess.run(cmd, cwd=NEON_TOOLS_DIR, env=env, capture_output=True, text=True)
         ended = utc_now()
+        ended_ee = ee_now()
         combined = (proc.stdout or "") + ("\n---STDERR---\n" + proc.stderr if proc.stderr else "")
         low = combined.lower()
         if proc.returncode == 0 and "auto-denied" not in low:
@@ -155,13 +181,13 @@ def wake_neon(items: list[str], timeout_s: int, model: str) -> int:
 
         with open(WAKE_LOG, "a", encoding="utf-8") as logf:
             logf.write(
-                f"\n=== WAKE started={started} ended={ended} state={state} rc={proc.returncode} items={item_list} ===\n"
+                f"\n=== WAKE started={started} ({started_ee}) ended={ended} ({ended_ee}) state={state} rc={proc.returncode} items={item_list} ===\n"
             )
             logf.write(combined[:8000] + "\n")
 
         write_atomic(
             WAKE_STATUS,
-            f"started={started}\nended={ended}\nstate={state}\nrc={proc.returncode}\nitems={item_list}\n",
+            f"started={started}\nstarted_ee={started_ee}\nended={ended}\nended_ee={ended_ee}\nstate={state}\nrc={proc.returncode}\nitems={item_list}\n",
         )
         return proc.returncode
     finally:
@@ -178,7 +204,8 @@ def main() -> None:
 
     items = collect_pending()
     now = utc_now()
-    lines = [f"checked_utc={now}", f"pending_count={len(items)}"] + [f"item={x}" for x in items]
+    ee = ee_now()
+    lines = [f"checked_utc={now}", f"checked_ee={ee}", f"pending_count={len(items)}"] + [f"item={x}" for x in items]
     write_atomic(PENDING_PATH, "\n".join(lines) + "\n")
 
     if items and not args.no_wake:

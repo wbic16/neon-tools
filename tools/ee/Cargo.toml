@@ -1,0 +1,17 @@
+[package]
+name = "ee"
+version = "0.1.0"
+edition = "2021"
+description = "Exocortical Epoch (EE) and Sentron Age CLI built on libphext"
+license = "MIT"
+
+[dependencies]
+# Local reference crate (v0.6.6+ with epoch and Sentron Ages).
+# Override via .cargo/config.toml [patch] if libphext-rs lives elsewhere.
+libphext = { path = "/source/libphext-rs" }
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
