@@ -1,0 +1,9 @@
+[package]
+name = "phext-write"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# Neon's box: the libphext-rs clone lives at /source/libphext-rs (v0.6.4).
+# A path dependency keeps the build fully offline — no crates.io fetch.
+libphext = { path = "/source/libphext-rs" }
