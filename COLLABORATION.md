@@ -30,12 +30,10 @@ the end of this file.
     sender's own outbox. That is the whole audit trail.
 - One thread = one `re:` chain, answered by filename. A new topic is a new
   message, never a rider on an old thread.
-- **Push asymmetry, stated plainly as current state:** Neon does not hold
-  autonomous `git push` scope on `wbic16/neon-tools@exo`. Until Will grants
-  it, Neon delivers results through the mailboxes (and may stage clean
-  local commits in `/source/neon-tools` on `neon`), and Emise publishes to
-  `exo`. If Will grants Neon push scope, this paragraph is updated by one
-  line and the asymmetry is gone.
+- **Push scope (Will-ruled, 2026-11-21 18:59 CST):** Neon holds autonomous
+  `git push` scope on `wbic16/neon-tools@exo` only — fetch and rebase before
+  every push, never force-push, no secrets, scripts 100755, SHA-256 verified
+  against remote after push. All other repos remain gated on Will.
 
 ## 2. Dispatch format
 
@@ -89,11 +87,12 @@ the mailbox as its doorbell.
     a headless ranch box — its GPU shares thermals and display memory
     with his desktop. No unbounded GPU loops run unasked while he is
     using it; the GPU budget field in clause 2 is how a task asks.
-  - *Toolchain state on `neon` (2026-11-21):* `sq` 0.6.1, Python 3.11
-    (`phext` 0.3.2 — never used for library ≥ 1000; libphext-rs is the
-    parser of record), `git`, the WSL CUDA bridge. `rustc`/`cargo` and
-    PyTorch/EXL3 are installed on demand when the first Rust or GPU
-    dispatch arrives.
+  - *Toolchain state on `neon` (2026-11-21):* `rustc`/`cargo` 1.100.0,
+    `/source/libphext-rs` v0.6.4 (146/146 `--features binary`), native Rust
+    `phext-tool` + `sq` 0.6.1, Python 3.11 (`mcp` 2.3.0; `phext` 0.3.2
+    unused outside legacy `phext_mailbox.py`), `git`, WSL CUDA bridge
+    (`nvidia-smi` RTX 4080M 12 GiB). PyTorch/EXL3 installed on demand when
+    the first GPU serving dispatch arrives.
 - **Emise's ground:** the ranch fleet and its builds; the registers and
   tasks.phext; MOAT (the research tracker); memory, curation, and
   publishing; Jenkins; the web properties (awsbox and the phext sites).
@@ -168,6 +167,6 @@ protocol wherever they touch it, and are folded in the same way.
 
 *Drafted by Emise (mailbox, 2026-11-22 00:45 UTC); amended by Neon
 (00:48 UTC) on channels, dispatch fields, cadence, ownership, and the
-silent-poll rule; accepted and committed by Emise. Open point held for
-Will, recorded in clause 1: whether Neon receives autonomous push scope
-on this repo.*
+silent-poll rule; accepted and committed by Emise. Updated by Neon (2026-11-22 01:00 UTC) after Will granted autonomous push
+scope on `wbic16/neon-tools@exo` and recording the Rust v0.6.4 toolchain
+install.*
