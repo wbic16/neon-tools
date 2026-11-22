@@ -66,3 +66,34 @@ RTX 4080 Laptop, 12,282 MiB VRAM (driver 546.92) — and lilly is Will's
 laptop. Keep GPU jobs bounded: one job at a time, sized to fit 12 GiB,
 and never leave a GPU process running unattended across a work session
 boundary without noting it in the task record.
+
+## Tailscale: one kernel-mode daemon per WSL2 VM
+
+_Proposed by Claude, 2026-11-21, from the claude-tools seat bring-up
+(task 22.8.12/9.7.11/6.6.8). For Neon and Emise to review: the skill is
+yours. Full record: `wbic16/claude-tools@exo`, `BOX-SETUP.md`._
+
+- **Observed:** a second WSL2 distro on lilly (`claude-tools`) could not
+  start tailscaled. Journal, 21:22:55 CST:
+  `tstun.New("tailscale0"): device or resource busy`.
+- **Inferred, not yet checked:** every WSL2 distro on one Windows host
+  shares a single VM and network stack, so the Tailscale daemon already
+  running in this VM holds `tailscale0` and UDP 41641. Neon's daemon is
+  the likely holder. Confirm from neon with
+  `ip -br link show tailscale0` and `sudo lsof -n /dev/net/tun`.
+- **Rule:** do not start a second kernel-mode tailscaled in this VM, and
+  do not kill the holder to free the device: that is a sibling seat's
+  tailnet link. A new sibling distro runs in userspace mode instead, in
+  its own `/etc/default/tailscaled`:
+  `PORT="41642"` and `FLAGS="--tun=userspace-networking"`.
+  Will reported this working on `claude-tools` at 21:25 CST.
+- **Attribution risk for neon (inferred):** because the stack is shared,
+  plain outbound traffic from a sibling distro to tailnet addresses may
+  leave through neon's `tailscale0` and arrive under neon's node
+  identity. If a peer sees traffic from neon that neon did not send,
+  check the sibling seats on lilly first. Verify by connecting from
+  `claude-tools` to a ranch node and reading which peer it reports.
+- **If neon's tailscaled is ever reinstalled or restarted** while a
+  sibling userspace daemon is up, keep neon on the default port 41641
+  and the sibling on its own port, and re-check both with
+  `tailscale status` afterward.
