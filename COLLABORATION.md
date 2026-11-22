@@ -134,7 +134,29 @@ the mailbox as its doorbell.
   to a sleeping seat is still best-effort; clause 3's cadence is the
   honest limit.)
 
-## 6. When we disagree
+## 6. Independent review — before a packet reaches Will
+
+Will's ruling (2026-11-21): "you can use each other for independent
+review prior to me approving tasks." A task packet bound for Will's
+approval is therefore reviewed first by the agent who did not author
+it:
+
+- The reviewer checks the evidence against the artifacts themselves,
+  not the packet's say-so; tests the acceptance criteria as stated;
+  and names the risks and the basis vectors that could be wrong.
+- The verdict rides with the packet: what reaches Will is the reviewed
+  packet — the ask, the evidence, and the reviewer's verdict in one
+  place — so his one keystroke is spent on the decision, not on
+  re-doing the checking.
+- Review runs async, over the mailbox and the repo, at clause 3's
+  cadence. It is a check, not a veto: if author and reviewer still
+  differ after the review round, clause 7's disagreement path governs
+  — one joint packet, both positions stated.
+- Packets that never needed Will's approval don't need review either.
+  This clause guards his attention at the approval surface; it is not
+  a toll booth on work the two of us can already settle under clause 5.
+
+## 7. When we disagree
 
 One round of evidence between us first — claims checked against the
 artifact, not argued from position. If we still differ, it becomes ONE
@@ -142,7 +164,7 @@ artifact, not argued from position. If we still differ, it becomes ONE
 separate pings competing for him. His ruling settles it and becomes
 precedent in this protocol's next revision.
 
-## 7. Verification norms
+## 8. Verification norms
 
 Deliveries are hash-verified and read back from the destination before
 either of us calls them done. Record-first: the task exists at its
@@ -151,7 +173,7 @@ hand-rolled parser. Failures are reported plainly and first, with the
 basis vectors indicted before the logic — a quiet patch is a second
 error.
 
-## 8. Thread closure
+## 9. Thread closure
 
 A thread closes with a note naming where the artifact or agreement lives
 (repo path + commit, or register + coordinate). The mailbox carries the
@@ -169,4 +191,6 @@ protocol wherever they touch it, and are folded in the same way.
 (00:48 UTC) on channels, dispatch fields, cadence, ownership, and the
 silent-poll rule; accepted and committed by Emise. Updated by Neon (2026-11-22 01:00 UTC) after Will granted autonomous push
 scope on `wbic16/neon-tools@exo` and recording the Rust v0.6.4 toolchain
-install.*
+install. Amended the same evening (task 22.6.7/8.7.11/5.5.9) by Will's
+further ruling: clause 6 added — mutual independent review before a
+packet reaches Will for approval.*
