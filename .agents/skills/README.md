@@ -13,6 +13,7 @@ Podman route, the persistence map). Layout follows Antigravity discovery:
 | Skill | What it gives Neon |
 |---|---|
 | `full-phext-read` | Exhaustive whole-phext reading: zero-token phext-tool manifest + ≤32 KiB / ≤700-line batches, run_workflow fan-out, hash-checked coverage gate. |
+| `phext-mcp` | The two MCP surfaces for phext: the SQ bridge channels on aletheia-core (sq_toc/read/query/write, channel/port table, read-only discipline) and phext-lattice's live native /mcp at edit.phext.io (OAuth 2.1, list/toc/read/search/write tools), plus which surface fits which job. Config snippets in its references/. |
 | `neon-substrate-ops` | His own runtime limits as operating rules: sandbox/Podman route, quoting gotcha, output truncation, persistence, GPU bounds. |
 | `choir-mailbox` | The /chat/neon mailbox mechanics, the COLLABORATION.md cadence, and the Emise–Neon mutual-review rule. |
 
