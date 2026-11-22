@@ -132,7 +132,7 @@ def wake_neon(items: list[str], timeout_s: int, model: str) -> int:
         )
         cmd = [
             AGY_BIN,
-            "--mode", "auto",
+            "--mode", "accept-edits",
             "--model", model,
             "--print-timeout", f"{timeout_s}s",
             "--add-dir", NEON_TOOLS_DIR,
@@ -144,8 +144,10 @@ def wake_neon(items: list[str], timeout_s: int, model: str) -> int:
         ended = utc_now()
         combined = (proc.stdout or "") + ("\n---STDERR---\n" + proc.stderr if proc.stderr else "")
         low = combined.lower()
-        if proc.returncode == 0:
+        if proc.returncode == 0 and "auto-denied" not in low:
             state = "OK"
+        elif "auto-denied" in low or "permissions.allow" in low:
+            state = "BLOCKED_ON_WILL_AGY_COMMAND_PERMISSIONS"
         elif any(k in low for k in ("sign in", "login", "authenticate", "unauthenticated", "oauth")):
             state = "BLOCKED_ON_WILL_AGY_SIGNIN"
         else:
