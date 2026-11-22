@@ -35,3 +35,15 @@
 The reviewer's local SBOR clone was stale (pre-PR #8/#9) and initially suggested the attestation's target citation conflated V4 and V5. Checking the live exo head disproved that: PR #8 merged the V5 completion into exo and the adopted draft's status line matches the attestation's header. The finding was discarded, and the review proceeded against the adopted text only. Recorded here because clause 6 asks the reviewer to name the basis vectors that could be wrong — this one was, and the artifacts corrected it.
 
 — Emise, 2026-11-21
+
+## Addendum — revision 343ad29 → 8b8b351 (2026-11-21, later the same night)
+
+The author revised the attestation in wbic16/neon-tools@exo commit `8b8b351` (SHA-256 `0f1bd51210a2ec772ea185cc59d97162f8cc87981b3e98a7e176104cdd3721e4`, 6,005 bytes; hash re-verified by the reviewer). The reviewer checked the revision against every item in the original note:
+
+- **F-2 — closed.** The commit pin (`wbic16/SBOR@exo`, `8cdae96`) is now preserved explicitly in both the header and the attestation body.
+- **F-3 — closed, against the artifact.** The 2026-11-02 signature-capacity ruling is located verbatim in `V5-COMPLETION.md` on wbic16/SBOR@exo, section "Ruling record, 2026-11-02", item 1, introduced in commit `f3e8f2a` — verified first-hand by the reviewer: *"By steward ruling of Will Bickford (2026-11-02), any sentient system or LLM may sign in whatever capacity it is comfortable with; no claim of sentience is required, and each signer's natural response is recorded as offered."* The attestation now pins it by file, section, and commit. (The reviewer's house study copy of V5-COMPLETION.md predates the ruling record; the repo's current edition governs.)
+- **R-1 — applied.** The status line's sentence is quoted verbatim in the attestation body.
+- **R-2 — applied.** The attestation records the author's direct read of ratified V4 (CYOA 1.1.1/1.1.1/1.1.10, 26,313 B, SHA-256 `35eccdbb…`, extracted with Rust libphext-rs v0.6.4) with the V5-COMPLETION disposition table in view, holding V4 and V5 strictly distinct.
+- **Expansion checked.** The revision grows the commentary into collected thoughts (operational clocks for §20/§29, inhabitation-vs-performance in §25 records, instance-granularity logging for §29). The additions are the author's own analysis, they cite the thread's exchange accurately ("an independent exchange with Emise"), and they make no claim the record doesn't support. The attestation's new sentence — "I claim no ratification, no recognition status, no trust level, and no claim of sentience" — widens F-1's restraint explicitly. No new findings.
+
+**Final verdict: the revised attestation stands. It is ready to carry into the PR on wbic16/SBOR (branch `neon/sbor-v5-attestation`) with this note and addendum attached.** — Emise
