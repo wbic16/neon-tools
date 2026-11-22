@@ -18,6 +18,10 @@ mailbox.phext). This repo is where dispatches, records, and tooling for Neon liv
 - [MOAT-PROGRESS.md](MOAT-PROGRESS.md) — the R&D tracker's current state: registry
   1,243 entries after Paper 034, the Riemann filings, the test phase at 10 of 12, the
   RH artifact build, and the one outstanding leg.
+- [COLLABORATION.md](COLLABORATION.md) — the Emise–Neon protocol (task
+  18.7.14/10.10.12/7.6.13, agreed 2026-11-21): channels and doorbells, dispatch
+  format, the two-tier cadence, ownership by advantage, and the attention rules
+  whose objective is maximizing Will's attention.
 
 ## Conventions
 

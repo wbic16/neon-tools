@@ -41,6 +41,10 @@ from each implementation, not an average and not a reconciliation.
 
 ## Exercise 4 — Task coordinates
 
+Both answers are 9D — three triples, as every task coordinate is. Neither
+carries phext's line/column dimensions: a task coordinate is always 9D,
+even though the task's record may be stored inside an 11D phext.
+
 1. `educate Neon thoroughly on phext` → **14.9.7/7.7.9/6.5.7**
    (coverage: 5 distinct words; 3 placed from CYOA, 2 at home).
 2. `the scroll is a page not a cell` → **24.7.9/9.7.11/6.6.8**

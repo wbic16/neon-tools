@@ -191,8 +191,12 @@ tonight, goes live on Will's sudo (see §8).
   coordinate is the task's reference address in Will's dialect space. It is stated when
   the task is acknowledged and carried in dispatch briefs and records. This dispatch,
   for example, is task 32.7.5/6.6.8/4.4.11.
+  **A task coordinate is always 9D** — three triples, as in that example. It is not an
+  11D phext coordinate: phext's 11 dimensions are the 9 address components plus line
+  and column, and line and column never attach to a task coordinate, even though the
+  task's record is stored inside a phext (tasks.phext).
 - Task lifecycle: **backlog → register → archive**, three containers; ticket number and
-  phext coordinate persist across all three. New ideas go to the backlog first.
+  task coordinate persist across all three. New ideas go to the backlog first.
 - **qexo** is the dispatch/execution layer (CLI + Android app; chats are the planning
   layer). It routes compute to the ranch nodes; aletheia-core is coordinator/drainer,
   one peer among equals — fair dispatch, not a default target.

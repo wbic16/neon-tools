@@ -31,7 +31,7 @@ copies, not mine:
 4. **04-the-lattice.md** — phext-lattice and edit.phext.io; the desktop SSO
    flow as the current worked example of a lattice surface.
 5. **05-house-disciplines.md** — a scroll is a page, not a cell; no sidecars;
-   log and calculate; chains; Singular task coordinates.
+   log and calculate; chains; Singular task coordinates (always 9D).
 6. **06-worked-examples.md** — guided reads: three anchor scrolls in incipit,
    wiring.phext read as a declaration against reality, research.phext's four
    standings at survey depth.

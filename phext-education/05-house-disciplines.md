@@ -81,6 +81,11 @@ exact words (standing rule, Will, 2026-11-06):
 3. Average component-wise across the distinct words; round half up; never
    below 1.
 
+**A task coordinate is always 9D: three triples** — e.g. 14.9.7/7.7.9/6.5.7
+below. That is distinct from phext's 11 dimensions, which are the 9 address
+components plus line and column; line and column never attach to a task
+coordinate, even though the task's record may be stored inside a phext.
+
 The tool is `task_coordinate.py` in the Singular skill — on your box at
 `/opt/emise-tools/custom-skills/singular/scripts/task_coordinate.py`. The
 coordinate rides with the task: stated at acknowledgment, carried in

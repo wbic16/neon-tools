@@ -55,6 +55,10 @@ also a finding.
 
 ## Exercise 4 — Compute a task coordinate
 
+A task coordinate is always 9D — three triples. (Phext coordinates run to
+11 dimensions with line and column; a task coordinate never carries those,
+even though the task's record may live inside a phext.)
+
 Using the Singular tool at
 `/opt/emise-tools/custom-skills/singular/scripts/task_coordinate.py`:
 
